@@ -1,44 +1,35 @@
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, 0)}`;
-}
-
-const ref = {
-  boxes: document.querySelector('div#boxes'),
-  input: document.querySelector('input[type="number"]'),
-  createBtn: document.querySelector('button[data-create]'),
-  destroyBtn: document.querySelector('button[data-destroy]'),
-}
-
-const getItemMarkup = (index) => `<div class="item"
- style="width: ${30 + 10 * index}px; height: ${30 + 10 * index}px; background-color: ${getRandomHexColor()}"></div>`
-
-const getItemListMarkup = (amount) => Array(amount).fill('').map((_, i) => getItemMarkup(i)).join('')
-
-ref.createBtn.addEventListener('click', handleClickCreate);
-ref.destroyBtn.addEventListener('click', handleClickDestroy);
-
-
-function handleClickCreate() {
-  clearBoxes();
-  createBoxes(Number(ref.input.value))
-}
-
-function handleClickDestroy() {
-  clearBoxes();
-}
-
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
+const refs = {
+  input: document.querySelector('#controls input'),
+  createBtn: document.querySelector('[data-create]'),
+  destroyBtn: document.querySelector('[data-destroy]'),
+  boxes: document.querySelector('#boxes'),
+};
 
 function createBoxes(amount) {
-  ref.boxes.insertAdjacentHTML('afterbegin', getItemListMarkup(amount));
-}
-
-function clearBoxes() {
-  while (ref.boxes.childNodes.length > 0) {
-    ref.boxes.firstChild.remove();
+  let size = 30;
+  for (let i = 0; i < amount; i += 1) {
+    const div = document.createElement('div');
+    div.style.backgroundColor = getRandomHexColor();
+    div.style.width = `${size}px`;
+    div.style.height = `${size}px`;
+    refs.boxes.appendChild(div);
+    size += 10;
   }
 }
+
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, 0)}`;
+}
+
+function destroyBoxes() {
+  refs.boxes.innerHTML = '';
+}
+
+refs.createBtn.addEventListener('click', () => {
+  const amount = refs.input.value;
+  createBoxes(amount);
+});
+
+refs.destroyBtn.addEventListener('click', () => {
+  destroyBoxes();
+});
